@@ -56,7 +56,7 @@ void set_classpath (char *toolsPath)
   #if TRACE
   printf ("calling cygwin_conv_to_win32_path with %s\n", toolsPath);
   #endif
-  cygwin_conv_to_win32_path (toolsPath, auxstr);
+  cygwin_conv_path (CCP_POSIX_TO_WIN_A, toolsPath, auxstr, MAX_PATH);
   toolsPath = auxstr;
 
   #if TRACE
@@ -82,7 +82,7 @@ char *get_loader_classpath (char *libpath, char *libcommpath)
   char *auxstr;
   
   auxstr = (char *) malloc (MAX_PATH);
-  cygwin_conv_to_win32_path (libpath, auxstr);
+  cygwin_conv_path (CCP_POSIX_TO_WIN_A, libpath, auxstr, MAX_PATH);
   libpath = auxstr;
 
   #if TRACE
@@ -90,7 +90,7 @@ char *get_loader_classpath (char *libpath, char *libcommpath)
   #endif
   
   auxstr = (char *) malloc (MAX_PATH);
-  cygwin_conv_to_win32_path (libcommpath, auxstr);
+  cygwin_conv_path (CCP_POSIX_TO_WIN_A, libcommpath, auxstr, MAX_PATH);
   libcommpath = auxstr;
 
   #if TRACE
@@ -139,7 +139,7 @@ int main (int argc, char *argv[])
 
   #ifdef __CYGWIN__
   auxstr = (char *) malloc (MAX_PATH);
-  cygwin_conv_to_win32_path (tinyvmHome, auxstr);
+  cygwin_conv_path (CCP_POSIX_TO_WIN_A, tinyvmHome, auxstr, MAX_PATH);
   tinyvmHome = auxstr;
 
   #if TRACE
