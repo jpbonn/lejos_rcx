@@ -20,7 +20,7 @@ CCOPT = -Wall -rdynamic -ldl -shared -fpic \
 # Windows with CygWin installed
 ifneq (,$(findstring cygwin,$(OSTYPE)))
   JIRTRCX=$(BIN_TARGET)/jirtrcx.dll
-  CCOPT= -mno-cygwin -I${JAVA_INCL} -I${JAVA_INCL}/win32 -I$(IRTRCX_INCL) -Wl,--add-stdcall-alias -shared -L"$(BIN_TARGET)" -lirtrcx
+  CCOPT= -D__int64=int64_t -I${JAVA_INCL} -I${JAVA_INCL}/win32 -I$(IRTRCX_INCL) -Wl,--add-stdcall-alias -shared -L"$(BIN_TARGET)" -lirtrcx
 endif
 
 # MacOS X
