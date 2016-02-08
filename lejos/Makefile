@@ -12,11 +12,40 @@ ifndef OSTYPE
   OSTYPE = $(shell uname -s|awk '{print tolower($$0)}')
 endif
 
+
+#------------------------------------------------------------------------------
+#                         The adjust-path macro
+# 
+# If COMSPEC is defined, Make is launched from Windows through
+# Cygwin.  This adjust-path macro will call 'cygpath -u' on all
+# paths to ensure they are readable by Make.
+#
+# If COMSPEC is not defined, Make is launched from *nix, and no adjustment
+# is necessary
+#------------------------------------------------------------------------------
+SPACE := $(empty) $(empty)
+ifndef COMSPEC
+ifdef ComSpec
+COMSPEC = $(ComSpec)
+endif # ComSpec
+endif # !COMSPEC
+
+ifdef COMSPEC
+	OSTYPE=cygwin
+	adjust-path = $(subst $(SPACE),\$(SPACE),$(shell cygpath -u "$1"))
+	adjust-path-mixed = $(subst $(SPACE),\$(SPACE),$(shell cygpath -m "$1"))
+else
+	adjust-path = $(subst $(SPACE),\$(SPACE),$1)
+	adjust-path-mixed = $(subst $(SPACE),\$(SPACE),$1)
+endif
+
+
 # determine LEJOS_HOME and path separators
 PWD=$(shell pwd)
 ifneq (,$(findstring cygwin,$(OSTYPE)))
   OSTYPE=cygwin
-  LEJOS_HOME=$(shell cygpath -m "$(PWD)")
+  LEJOS_HOME=$(call adjust-path-mixed,$(shell pwd))
+#  LEJOS_HOME=$(shell cygpath -m "$(PWD)")
   PATH_SEP=;
 else
   LEJOS_HOME=$(PWD)
@@ -36,9 +65,13 @@ JIRTRCX_LIB_SRC="src/comms/libjirtrcx"
 
 export JAVA
 
-default: emulator irtrcx_libs all_java scripts tinyvm_emul
+default: props emulator irtrcx_libs all_java scripts tinyvm_emul
 
-all: default lejos_bin
+all: props default lejos_bin
+
+props:
+	@echo "LEJOS_HOME set to $(LEJOS_HOME)"
+	@echo "Compiling for $(OSTYPE)"
 
 all_java:
 	${ANT} irctrcx.libs jirctrcx.libs lejos.libs
