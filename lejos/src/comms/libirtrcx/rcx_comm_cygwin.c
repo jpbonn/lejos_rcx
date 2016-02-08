@@ -67,7 +67,6 @@ int __rcx_read_usb (rcx_dev_t *port, void* buf, int maxlen, int timeout_ms);
 /* Read from serial port */
 int __rcx_read_serial (void* port, void *buf, int maxlen, int timeout_ms);
 
-void gettimeofday(struct timeval *tv, void *tzp);
 
 /*
 implementation
@@ -306,14 +305,6 @@ int __rcx_open_setSerialPortParameters (Port *port)
 void __rcx_close (rcx_dev_t *port) {
 	CloseHandle(port->fd);
 	free(port);
-}
-
-void gettimeofday( struct timeval *tv, void *tzp) 
-{
-	SYSTEMTIME st;
-	GetSystemTime(&st);
-	tv->tv_sec = (st.wHour) * 3600 + (st.wMinute) * 60 + st.wSecond;
-	tv->tv_usec = st.wMilliseconds * 1024;
 }
 
 void usleep(int x) {
