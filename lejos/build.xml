@@ -5,6 +5,10 @@
   ==================================================
 -->
 <project name="leJOS" default="build" basedir=".">
+	<!-- The presetdef causes a "Trying to override old definition of java task" warining. -->
+	<presetdef name="javac">
+		<javac includeantruntime="false" />
+	</presetdef>
 	
 	<!-- Setting up the global properties for the build -->
   	<property file="build.properties"/>
